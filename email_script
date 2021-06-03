@@ -1,0 +1,51 @@
+// add menu to Sheet
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Extract Emails')
+      .addItem('Extract Emails...', 'extractEmails')
+      .addToUi();
+}
+
+// extract emails from label in Gmail
+function extractEmails() {
+  
+  // get the spreadsheet
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Expenses');
+  //var sheet = ss.getSheetByName("first");
+  var regex = '=MID(A5,SEARCH("$",A5)+1,SEARCH(".",A5,SEARCH("$",A5))-SEARCH("$",A5)+2)';
+
+  
+  // get all email threads that match label from Sheet
+  var threads1 = GmailApp.search ('is:starred label:personal-receipts');
+  var threads2 = GmailApp.search ('is:starred label:personal-paystubs');
+  //search all threads and messages for receipts
+   for (var i=0; i<threads1.length; i++)
+  {
+    var messages = threads1[i].getMessages();
+    
+    for (var j=0; j<messages.length; j++)
+    {
+      //GmailApp.unstarMessage(messages[j]);
+      var msg = messages[j].getPlainBody();
+      var sub = messages[j].getSubject();
+      var dat = messages[j].getDate();
+      ss.appendRow([msg, sub, dat, regex])
+    }
+  }
+  //search all threads and messages for paystubs
+ var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Income');
+
+     for (var i=0; i<threads2.length; i++)
+  {
+    var messages = threads2[i].getMessages();
+    
+    for (var j=0; j<messages.length; j++)
+    {
+      //GmailApp.unstarMessage(messages[j]);
+      var msg = messages[j].getPlainBody();
+      var sub = messages[j].getSubject();
+      var dat = messages[j].getDate();
+      ss.appendRow([msg, sub, dat, regex])
+    }
+  }
+}
