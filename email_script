@@ -32,7 +32,7 @@ function extractEmails() {
       ss.appendRow([msg, sub, dat, regex])
     }
   }
-  //search all threads and messages for paystubs
+  //search all threads and messages for paystubs, add to spreadsheet in "Income" tab
  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Income');
 
      for (var i=0; i<threads2.length; i++)
